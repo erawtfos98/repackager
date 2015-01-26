@@ -1,0 +1,65 @@
+#!/bin/sh
+
+#back things up in /tmp
+
+FILENAME="packagelist.txt"
+#old is the number of days a package list is considered old
+OLD="14"
+
+if [ -e /tmp/$FILENAME ]
+then
+
+	#Grab the date the file was last modded:
+	LASTMOD=$(date +%s -r /home/fenriz/Desktop/testfile.jpg)
+	TODAY=$(date +%s)
+	#DIFF is the number of days the file is old
+	DIFF=$(expr $(expr $TODAY - $LASTMOD) / 86400)
+
+	#Let's check:
+	if [[ $DIFF -ge $OLD ]]
+	then
+		#Okay, it is too old, let's ask what the user wants:
+		echo "Your packagelist.txt appears to be more than $OLD days old.  Would you like to make a new copy?"
+
+		while [ 1 ];
+		do
+			answer="x"
+			read -p  "[Y/n]: " answer
+			if [[ $answer == "Y" ]] || [[ $answer == "y" ]];
+			then
+				echo "now backing up"
+				break
+			elif [[ $answer == "n" ]]; then
+				break
+			fi
+		done
+		echo -e '\n'
+
+	fi
+
+	# Resume control here
+	echo "Reinstall all the packages from $FILENAME?"
+
+	while [ 1 ];
+	do
+		answer="x"
+		read -p  "[Y/n]: " answer
+		if [[ $answer == "Y" ]] || [[ $answer == "y" ]];
+		then
+			pacman -S $(< /tmp/$FILENAME)
+			break
+		elif [[ $answer == "n" ]]; then
+			echo "Bye!"
+			exit
+		fi
+	done
+
+
+	#From here, we need to see if it is more than
+else
+	echo -e "Please move your "packagelist.txt" into the /tmp dir"
+fi
+
+pacman -Qqen > /tmp/$FILENAME
+
+#pacman -S $(< /tmp/$FILENAME)
