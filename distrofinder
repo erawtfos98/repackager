@@ -1,0 +1,27 @@
+#!/bin/sh
+
+debbased="apt-get"
+arch="pacman"
+rhbased="yum"
+
+function1()
+{
+
+	isitdeb=$(echo $isitdeb | awk '{print $2}')
+	isitarch=$(echo $isitarch | awk '{print $2}')
+	isitrhbased=$(whereis -b $rhbased)
+
+	if [[ ! -z $isitdeb ]] || [[ $isitdeb == "/usr/bin/apt-get" ]]
+	then
+		echo "Found a .deb based distro"
+	elif [[ ! -z $isitarch ]] || [[ $isitarch  == "/usr/bin/pacman" ]]
+	then
+		echo "Found an arch based distro"
+	elif [[ ! -z $isitrhbased ]] || [[ $isitrhbased == "/usr/bin/yum" ]]
+	then
+		echo "Found an rpm based distro"
+	fi
+
+}
+
+function1
