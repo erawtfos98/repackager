@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 debbased="apt-get"
 arch="pacman"
@@ -6,22 +6,28 @@ rhbased="yum"
 
 function1()
 {
+	isitdeb=$(whereis -b $debbased  | awk '{print $2}')
+	echo $isitdeb
+	isitarch=$(whereis -b $arch | awk '{print $2}')
+	echo $isitarch
+	isitrhbased=$(whereis -b $rhbased | awk '{print $2}')
+	echo $isitrhbased
 
-	isitdeb=$(echo $isitdeb | awk '{print $2}')
-	isitarch=$(echo $isitarch | awk '{print $2}')
-	isitrhbased=$(whereis -b $rhbased)
-
-	if [[ ! -z $isitdeb ]] || [[ $isitdeb == "/usr/bin/apt-get" ]]
+	if [[ ! -z $isitdeb ]] && [[ $isitdeb == "/usr/bin/apt-get" ]]
 	then
 		echo "Found a .deb based distro"
-	elif [[ ! -z $isitarch ]] || [[ $isitarch  == "/usr/bin/pacman" ]]
+	elif [[ ! -z $isitarch ]] && [[ $isitarch  == "/usr/bin/pacman" ]]
 	then
 		echo "Found an arch based distro"
-	elif [[ ! -z $isitrhbased ]] || [[ $isitrhbased == "/usr/bin/yum" ]]
+	elif [[ ! -z $isitrhbased ]] && [[ $isitrhbased == "/usr/bin/yum" ]]
 	then
-		echo "Found an rpm based distro"
+		echo "Found an .rpm based distro"
+	else
+		echo "Error"
 	fi
 
+	# should there be an option for the user to enter
+	# their distro?
 }
 
 function1
