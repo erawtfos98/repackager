@@ -1,5 +1,5 @@
-#!/bin/sh
-
+#!/bin/bash
+. distrofinder.sh
 #back things up in /tmp
 
 FILENAME="packagelist.txt"
@@ -60,6 +60,6 @@ else
 	echo -e "Please move your "packagelist.txt" into the /tmp dir"
 fi
 
-pacman -Qqen > /tmp/$FILENAME
+#pacman -Qqen > /tmp/$FILENAME
 
 #pacman -S $(< /tmp/$FILENAME)
