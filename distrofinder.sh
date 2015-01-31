@@ -21,9 +21,9 @@ findDistro()
 		echo "arch"
 	elif [[ ! -z $isitrhbased ]] && [[ $isitrhbased == "/usr/bin/yum" ]]
 	then
-		echo "Found an .rpm based distro"
-	else
 		echo "yum"
+	else
+		echo "Unknown Distro"
 	fi
 
 	# should there be an option for the user to enter
