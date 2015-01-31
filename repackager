@@ -7,6 +7,8 @@ FILENAME="packagelist.txt"
 #old is the number of days a package list is considered old
 OLD="14"
 
+COMMAND=""
+
 if [ -e /tmp/$FILENAME ]
 then
 
@@ -74,9 +76,32 @@ else
 	# package list isn't found, either they don't have
 	# it (running for the first time) or it is located
 	# somewhere else
-	echo -e ""packagelist.txt" cannot be found, if it exists, please move your "packagelist.txt" into /tmp and run repackager again"
+	echo -e "Couldn't find a "packagelist.txt", make a new one?"
+
+	while [ 1 ];
+	do
+		userinput="x"
+		read -p "[Y/n]: " userinput
+		if [[ $userinput == "Y" ]] || [[ $userinput == "y" ]];
+		then
+			if [[ $distro == "deb" ]];
+			then
+				COMMAND=$(dpkg -l | grep ii | awk '{print $2}' > /tmp/$FILENAME)
+			elif [[ $distro == "arch" ]];
+			then
+				COMMAND=$(pacman -Qqen > /tmp/$FILENAME)
+			elif [[ $distro == "yum" ]];
+			then
+				COMMAND=$(yum list installed > /tmp/$FILENAME)
+			fi
+			echo "Done."
+			break
+		else
+			echo -e ""packagelist.txt" cannot be found, if it exists, please move your "packagelist.txt" into /tmp and run repackager again"
+			break
+		fi
+
+	done
 fi
 
-#pacman -Qqen > /tmp/$FILENAME
-#dpkg --list | grep ii | awk '{print $2}' > /tmp/$FILENAME
 #pacman -S $(< /tmp/$FILENAME)
