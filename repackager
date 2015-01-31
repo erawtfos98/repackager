@@ -63,8 +63,17 @@ then
 		read -p  "[Y/n]: " answer
 		if [[ $answer == "Y" ]] || [[ $answer == "y" ]];
 		then
-			pacman -S $(< /tmp/$FILENAME)
+			if [[ $distro == "deb" ]];
+			then
+				sudo apt-get install $(< /tmp/$FILENAME)
+			elif [[ $distro == "arch" ]];
+			then
+				pacman -S $(< /tmp/$FILENAME)
+			elif [[ $distro == "yum" ]]; then
+				sudo yum install $(< /tmp/$FILENAME)
+			fi
 			break
+
 		elif [[ $answer == "n" ]]; then
 			echo "Bye!"
 			exit
@@ -92,7 +101,8 @@ else
 				COMMAND=$(pacman -Qqen > /tmp/$FILENAME)
 			elif [[ $distro == "yum" ]];
 			then
-				COMMAND=$(yum list installed > /tmp/$FILENAME)
+				#COMMAND=$(yum list installed | awk '{print $1}' | sed '/^@/ d' > /tmp/$FILENAME)
+				COMMAND=$(yum list installed | sed 's/\ .*//' > /tmp/$FILENAME)
 			fi
 			echo "Done."
 			break
