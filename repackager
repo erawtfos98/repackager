@@ -6,12 +6,12 @@ distro=$(. distrofinder.sh)
 FILENAME="packagelist.txt"
 #old is the number of days a package list is considered old
 OLD="14"
-
+# COMMAND is the command to run depending on the user's
+# distro
 COMMAND=""
 
 if [ -e /tmp/$FILENAME ]
 then
-
 	#Grab the date the file was last modded:
 	LASTMOD=$(date +%s -r /tmp/$FILENAME)
 	TODAY=$(date +%s)
@@ -30,7 +30,7 @@ then
 			read -p  "[Y/n]: " answer
 			if [[ $answer == "Y" ]] || [[ $answer == "y" ]];
 			then
-				echo "now backing up"
+				echo "Now backing up"
 
 				if [[ $distro == "deb" ]];
 				then
@@ -47,14 +47,14 @@ then
 				break
 
 			elif [[ $answer == "n" ]]; then
+				echo "User does not want to back up"
 				break
 			fi
 		done
 		echo -e '\n'
-
 	fi
 
-	# Resume control here
+	# packagelist.txt is found, Resume control here:
 	echo "Reinstall all the packages from $FILENAME?"
 
 	while [ 1 ];
@@ -79,14 +79,13 @@ then
 			exit
 		fi
 	done
-
-
 else
 	# package list isn't found, either they don't have
 	# it (running for the first time) or it is located
 	# somewhere else
 	echo -e "Couldn't find a "packagelist.txt", make a new one?"
 
+	# wait for user input:
 	while [ 1 ];
 	do
 		userinput="x"
@@ -101,17 +100,18 @@ else
 				COMMAND=$(pacman -Qqen > /tmp/$FILENAME)
 			elif [[ $distro == "yum" ]];
 			then
-				#COMMAND=$(yum list installed | awk '{print $1}' | sed '/^@/ d' > /tmp/$FILENAME)
-				COMMAND=$(yum list installed | sed 's/\ .*//' > /tmp/$FILENAME)
+				# yum has the top lines as
+				# headers, so it has to be
+				# removed
+				COMMAND=$(yum list installed | awk 'NR > 2 {print}' | sed 's/\ .*//' > /tmp/$FILENAME)
 			fi
+
 			echo "Done."
 			break
 		else
+			# package list not found
 			echo -e ""packagelist.txt" cannot be found, if it exists, please move your "packagelist.txt" into /tmp and run repackager again"
 			break
 		fi
-
 	done
 fi
-
-#pacman -S $(< /tmp/$FILENAME)
