@@ -1,7 +1,8 @@
 #!/bin/bash
-. distrofinder.sh
-#back things up in /tmp
 
+# the variable for which distro
+distro=$(. distrofinder.sh)
+# the filename which holds the names of the packages
 FILENAME="packagelist.txt"
 #old is the number of days a package list is considered old
 OLD="14"
@@ -10,7 +11,7 @@ if [ -e /tmp/$FILENAME ]
 then
 
 	#Grab the date the file was last modded:
-	LASTMOD=$(date +%s -r /home/fenriz/Desktop/testfile.jpg)
+	LASTMOD=$(date +%s -r /tmp/$FILENAME)
 	TODAY=$(date +%s)
 	#DIFF is the number of days the file is old
 	DIFF=$(expr $(expr $TODAY - $LASTMOD) / 86400)
@@ -28,7 +29,21 @@ then
 			if [[ $answer == "Y" ]] || [[ $answer == "y" ]];
 			then
 				echo "now backing up"
+
+				if [[ $distro == "deb" ]];
+				then
+					echo "it's a deb"
+				elif [[ $distro == "arch" ]];
+				then
+					echo "it's an arch"
+				elif [[ $idstro == "it's a yum" ]];
+				then
+					echo "yummy"
+				else
+					echo "distro not found"
+				fi
 				break
+
 			elif [[ $answer == "n" ]]; then
 				break
 			fi
@@ -55,11 +70,13 @@ then
 	done
 
 
-	#From here, we need to see if it is more than
 else
-	echo -e "Please move your "packagelist.txt" into the /tmp dir"
+	# package list isn't found, either they don't have
+	# it (running for the first time) or it is located
+	# somewhere else
+	echo -e ""packagelist.txt" cannot be found, if it exists, please move your "packagelist.txt" into /tmp and run repackager again"
 fi
 
 #pacman -Qqen > /tmp/$FILENAME
-
+#dpkg --list | grep ii | awk '{print $2}' > /tmp/$FILENAME
 #pacman -S $(< /tmp/$FILENAME)

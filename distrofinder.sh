@@ -4,30 +4,30 @@ debbased="apt-get"
 arch="pacman"
 rhbased="yum"
 
-function1()
+findDistro()
 {
 	isitdeb=$(whereis -b $debbased  | awk '{print $2}')
-	echo $isitdeb
+	#echo $isitdeb
 	isitarch=$(whereis -b $arch | awk '{print $2}')
-	echo $isitarch
+	#echo $isitarch
 	isitrhbased=$(whereis -b $rhbased | awk '{print $2}')
-	echo $isitrhbased
+	#echo $isitrhbased
 
 	if [[ ! -z $isitdeb ]] && [[ $isitdeb == "/usr/bin/apt-get" ]]
 	then
-		echo "Found a .deb based distro"
+		echo "deb"
 	elif [[ ! -z $isitarch ]] && [[ $isitarch  == "/usr/bin/pacman" ]]
 	then
-		echo "Found an arch based distro"
+		echo "arch"
 	elif [[ ! -z $isitrhbased ]] && [[ $isitrhbased == "/usr/bin/yum" ]]
 	then
 		echo "Found an .rpm based distro"
 	else
-		echo "Error"
+		echo "yum"
 	fi
 
 	# should there be an option for the user to enter
 	# their distro?
 }
 
-function1
+findDistro
