@@ -24,7 +24,6 @@ then
 		#Okay, it is too old, let's ask what the user wants:
 		echo "Your packagelist.txt appears to be more than $OLD days old.  Would you like to make a new copy?"
 
-		#testing 1 2 3
 		while [ 1 ];
 		do
 			answer="x"
